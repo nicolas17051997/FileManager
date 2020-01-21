@@ -14,12 +14,16 @@ using File_Sharing.Crypt;
 using File_Sharing.Viewmodels;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Extensions;
+using File_Sharing.Services;
+using File_Sharing.Help;
 
 namespace File_Sharing.Controllers
 {
     [Authorize]
     public class HomeController: Controller
     {
+        public string Pathh = "";
         private DataContext _dbContext;
         private IWebHostEnvironment _webHostEnvir;
         public HomeController(DataContext dataContext, IWebHostEnvironment webHost)
@@ -116,5 +120,37 @@ namespace File_Sharing.Controllers
                 {".csv", "text/csv"}
             };
         }
+        [HttpGet]
+        public async Task<IActionResult> SendMailLink (string filename)
+        {
+            return View(Pathh = filename);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SendMailLink(string emailMargin, string fileModel )
+        {
+            //string baseUrl = Request.Url.GetLeftPart(UriPartial.Authority);
+            string url = (HttpContext.Request.GetDisplayUrl()).Replace("SendMailLink", "Download");
+
+            url += fileModel;
+           // var GenarateUrl = GetUrl.GetUri(request);
+            EmailServices serviceSender = new EmailServices();
+            await serviceSender.SendEmailLinkAsync(emailMargin, "This is your link for download photo",
+                $" Pleace enter this link and go to <a href='{url}'>link for download photo</a>");
+            return Content("The message was sent to the specified email " + emailMargin);
+        }
+        //[HttpGet]
+        //public async Task<IActionResult> SendMailLink(string filename)
+        //{
+            
+        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
+        {
+            // удаляем аутентификационные куки
+            //await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+       
     }
 }
