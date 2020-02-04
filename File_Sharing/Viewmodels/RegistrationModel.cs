@@ -16,7 +16,7 @@ namespace File_Sharing.Viewmodels
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string Pasword { get; set; }
+        public string Password { get; set; }
 
 
         [Required(ErrorMessage = "Passwords do not match")]

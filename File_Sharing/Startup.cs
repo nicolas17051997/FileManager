@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using File_Sharing.Models;
+using Microsoft.Extensions.Hosting;
+using File_Sharing.Hubs;
 
 namespace File_Sharing
 {
@@ -34,7 +36,8 @@ namespace File_Sharing
                 {
                     option.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-            
+
+            services.AddSignalR();            
             services.AddControllersWithViews();
         }
 
@@ -61,6 +64,8 @@ namespace File_Sharing
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatUsersHub>("/chat");
+                endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

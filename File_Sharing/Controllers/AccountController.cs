@@ -55,7 +55,7 @@ namespace File_Sharing.Controllers
                 User newUser = await contextDb.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
                 if(newUser == null)
                 {
-                    contextDb.Add(new User { Email = model.Email, LasttName = model.LastName, Name = model.Name, Password = model.Pasword });
+                    contextDb.Add(new User { Email = model.Email, LasttName = model.LastName, Name = model.Name, Password = model.Password });
                     await contextDb.SaveChangesAsync();
 
                     await Authenticate(model.Email);
